@@ -15,11 +15,11 @@ for routers in devices:
         file1 = f1.readlines()
         file2 = f2.readlines()
         for diff in difflib.context_diff(file1,file2,fromfile=firstfile,tofile=secondfile):
-            if diff:
-                results.append(('GRU', routers, 'Out of sync'))
-            else:
-                results.append(('GRU', routers, 'In Sync'))
-        print diff,
+            print diff,        
+        if diff:
+            results.append(('GRU', routers, 'Out of sync'))
+        else:
+            results.append(('GRU', routers, 'In Sync'))
 
 
 print "{0:<12} {1:^24} {2:24}".format("Region", "Device", "Status")
