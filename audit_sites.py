@@ -6,21 +6,25 @@ parser.add_argument('--region', help='specify region')
 args = parser.parse_args()
 
 #Reading files
-devices = ['gru1-vc-car-r1','gru1-vc-car-r2']
+#devices = ['gru1-vc-car-r1','gru1-vc-car-r2','gru3-vc-car-r1','gru3-vc-car-r2']
+devices = ['dummyrouter']
 results = []
+def compare_files(file1,file2,fromfile,tofile):
+    for diff in  difflib.context_diff(file1,file2,fromfile,tofile):
+        return diff
+
 for routers in devices:
     firstfile = 'GRU/'+str(routers)+'_current.conf'
     secondfile =  'GRU/'+str(routers)+'_expected.conf'
     with open(firstfile, 'r') as f1, open(secondfile, 'r') as f2:
         file1 = f1.readlines()
         file2 = f2.readlines()
-        for diff in difflib.context_diff(file1,file2,fromfile=firstfile,tofile=secondfile):
-            print diff,        
-        if diff:
-            results.append(('GRU', routers, 'Out of sync'))
+        diff = compare_files(file1,file2,firstfile,secondfile)
+        print diff
+        if diff == None:
+            results.append(('GRU', routers, 'IN SYNC'))
         else:
-            results.append(('GRU', routers, 'In Sync'))
-
+            results.append(('GRU', routers, 'NOT IN SYNC'))
 
 print "{0:<12} {1:^24} {2:24}".format("Region", "Device", "Status")
 print "-"*46
