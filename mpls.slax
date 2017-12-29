@@ -1,0 +1,51 @@
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+
+var $arguments = {
+    <argument> {
+        <name> "interface";
+        <description> "Optional interface name";
+    }
+}
+param $interface;
+
+match / {
+    <op-script-results> {
+        if (not(contains($interface, "."))) {
+            var $mpls-rpc = {
+                <get-mpls-lsp-information> {
+                    if ($interface) {
+                        expr "<transit>";
+                    }
+                    <detail>;
+                }
+            };
+            var $mpls = jcs:invoke($mpls-rpc);
+
+            <output> jcs:printf("LSP Name                                       Resv BW        Measured BW  Adjust In\n");
+
+            for-each ($mpls/rsvp-session-data/rsvp-session/mpls-lsp[lsp-state == 'Up']) {
+                <output> jcs:printf("%-35s %14s %14s %5s secs\n", name, mpls-lsp-path/bandwidth, mpls-lsp-autobandwidth/bandwidth, mpls-lsp-autobandwidth/time-to-adjust);
+            }
+         } else {
+            var $rsvp-rpc = {
+                <get-rsvp-session-information> {
+                    <interface> $interface;
+                    <detail>;
+                }
+            };
+            var $rsvp = jcs:invoke($rsvp-rpc);
+
+            <output> jcs:printf("LSP Name                                        Reserved BW     Session Type\n");
+
+            for-each ($rsvp/rsvp-session-data/rsvp-session[lsp-state == 'Up' && lsp-path-type == 'Primary']) {
+                var $bw = jcs:regex("rate (.*) size.*", sender-tspec);
+
+                <output> jcs:printf("%-35s %14s %11s\n", name, $bw[2], ../session-type);
+            }
+        }
+    }
+}
