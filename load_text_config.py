@@ -4,10 +4,10 @@ import argparse
 import getpass
 
 parser = argparse.ArgumentParser(description='script for commiting config on juniper routers')
-parser.add_argument('--device', '-d', help='device name')
+parser.add_argument('--device', '-d', help='device name', required=True)
 parser.add_argument('--file', '-f', help='file containing routers')
-parser.add_argument('--username', '-u', help='enter username')
-parser.add_argument('--config', '-c', help='enter config file')
+parser.add_argument('--username', '-u', help='enter username', required=True)
+parser.add_argument('--config', '-c', help='enter config file', required=True)
 args=parser.parse_args()
 
 def get_password():
@@ -46,7 +46,7 @@ def read_file_multiple_routers(filename):
             for i in routers_to_apply_config:
                 routers.append(i)
             return routers
-        except IOError:
+    except IOError:
             print 'Error: File does not exist.'
             return 0
 
@@ -77,7 +77,6 @@ def main():
         cu.pdiff()
         connect_to_devices.open()
         commitconfig()
-            
     except:
         print 'this is a generic error message'
 
