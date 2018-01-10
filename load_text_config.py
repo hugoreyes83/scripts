@@ -62,14 +62,6 @@ def commitconfig(commitcheck,device,username,password):
         cu.rollback()
         print 'config had to be rolledback'
 
-
-#ask for password for connecting to routers
-#read config file
-#in case config is to be pushed to multiple routers then parse that file and return a list
-#create a dev object
-#diff config
-#ask if config is to be commited
-#if config is to be commited then push config to router
 def main():
     try:
         enable_password = get_password()
