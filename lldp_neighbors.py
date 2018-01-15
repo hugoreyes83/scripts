@@ -1,4 +1,5 @@
 from jnpr.junos import Device
+from jnpr.junos.op.lldp import LLDPNeighborTable
 from jnpr.junos.exception import ConnectError
 from jnpr.junos.exception import ConnectAuthError
 from jnpr.junos.exception import ConnectRefusedError
