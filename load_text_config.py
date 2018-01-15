@@ -1,5 +1,14 @@
 from jnpr.junos import Device
 from jnpr.junos.utils.config import Config
+from jnpr.junos.exception import ConnectAuthError
+from jnpr.junos.exception import ConnectRefusedError
+from jnpr.junos.exception import ConnectTimeoutError
+from jnpr.junos.exception import ConnectError
+from jnpr.junos.exception import LockError
+from jnpr.junos.exception import PermissionError
+from jnpr.junos.exception import UnlockError
+from jnpr.junos.exception import CommitError
+from jnpr.junos.exception import ConfigLoadError
 import argparse
 import getpass
 
@@ -87,8 +96,16 @@ def main():
             connect_to_devices.open()
             commit_check_config = cu.commit_check()
             commitconfig(commit_check_config,args.device,args.username,enable_password)
-    except:
-        print 'this is a generic error message'
+    except LockError as e :
+        print e
+    except PermissionError as e:
+        print e
+    except UnlockError as e:
+        print e
+    except CommitError as e:
+        print e
+    except ConfigLoadError as e:
+        print e
 
 if __name__ == '__main__':
     main()
