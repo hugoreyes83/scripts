@@ -24,18 +24,8 @@ def get_password():
     return getpasswd
 
 def connect_to_router(host,user,password):
-    try:
-        dev = Device(host=host, user=user, password=password, gather_facts=False)
-        dev.open()
-        return dev
-    except ConnectAuthError as e:
-        print e
-    except ConnectRefusedError as e:
-        print e
-    except ConnectTimeoutError as e:
-        print e
-    except ConnectError as e:
-        print e
+    dev = Device(host=host, user=user, password=password, gather_facts=False)
+    return dev
 
 def read_config_file(config_file):
     try:
@@ -96,6 +86,14 @@ def main():
             connect_to_devices.open()
             commit_check_config = cu.commit_check()
             commitconfig(commit_check_config,args.device,args.username,enable_password)
+    except ConnectAuthError as e:
+        print e
+    except ConnectRefusedError as e:
+        print e
+    except ConnectTimeoutError as e:
+        print e
+    except ConnectError as e:
+        print e
     except LockError as e :
         print e
     except PermissionError as e:
