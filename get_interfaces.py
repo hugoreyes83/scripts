@@ -21,8 +21,15 @@ def main():
     else:
         header = ['Interface', 'Description', 'Last Flapped', 'Status', 'MAC Address', 'Speed']
         table = PrettyTable(header)
-        for i in router.get_interfaces():
-            table.add_row([router.get_interfaces()[i],router.get_interfaces()[i]['description'],router.get_interfaces()[i]['last_flapped'],router.get_interfaces()[i]['is_up'],router.get_interfaces()[i]['mac_address'],router.get_interfaces()[i]['speed']])
+        interfaces = router.get_interfaces()
+        for i in interfaces:
+            port = i
+            desc =  interfaces[i]['description']
+            flap = interfaces[i]['last_flapped']
+            state =  interfaces[i]['is_up']
+            mac =  interfaces[i]['mac_address']
+            speed = interfaces[i]['speed']
+            table.add_row([port,desc,flap,state,mac,speed])
         print table
 if __name__ == '__main__':
     main()
