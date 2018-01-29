@@ -4,6 +4,16 @@ from napalm import get_network_driver
 from prettytable import PrettyTable
 import getpass
 import re
+from jnpr.junos.exception import ConnectAuthError
+from jnpr.junos.exception import ConnectRefusedError
+from jnpr.junos.exception import ConnectTimeoutError
+from jnpr.junos.exception import ConnectError
+from jnpr.junos.exception import LockError
+from jnpr.junos.exception import PermissionError
+from jnpr.junos.exception import UnlockError
+from jnpr.junos.exception import CommitError
+from jnpr.junos.exception import ConfigLoadError
+
 parser = argparse.ArgumentParser(description='script for gathering interfaces data from a router')
 parser.add_argument('--device')
 parser.add_argument('--username')
