@@ -8,11 +8,7 @@ from jnpr.junos.exception import ConnectAuthError
 from jnpr.junos.exception import ConnectRefusedError
 from jnpr.junos.exception import ConnectTimeoutError
 from jnpr.junos.exception import ConnectError
-from jnpr.junos.exception import LockError
 from jnpr.junos.exception import PermissionError
-from jnpr.junos.exception import UnlockError
-from jnpr.junos.exception import CommitError
-from jnpr.junos.exception import ConfigLoadError
 
 parser = argparse.ArgumentParser(description='script for gathering interfaces data from a router')
 parser.add_argument('--device',required=True)
@@ -52,8 +48,6 @@ def main():
                     mac =  interfaces[i]['mac_address']
                     speed = interfaces[i]['speed']
                     if i in list_of_lldp_interfaces:
-                        header = ['Interface', 'Description', 'Last Flapped', 'Status', 'MAC Address', 'Speed', 'LLDP Neighbor', 'Remote Interface']
-                        table = PrettyTable(header)
                         lldp_neighbor =  lldp_neighbors[i][0]['hostname']
                         lldp_port = lldp_neighbors[i][0]['port']
                         table.add_row([port,desc,flap,state,mac,speed,lldp_neighbor,lldp_port])
@@ -66,7 +60,12 @@ def main():
         print e
     except ConnectRefusedError as e:
         print e
-
+    except ConnectTimeoutError as e:
+        print e
+    except ConnectError as e:
+        print e
+    except PermissionError as e:
+        print e
 if __name__ == '__main__':
     main()
 
