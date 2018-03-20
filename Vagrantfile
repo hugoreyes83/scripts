@@ -2,9 +2,9 @@ Vagrant.configure("2") do |config|
 
 config.vm.define "leaf1" do |leaf1|  
   leaf1.vm.box = "CumulusCommunity/cumulus-vx"
+  leaf1.vm.network :private_network, ip: "1.1.1.1/32"
   leaf1.vm.network :private_network, ip: "10.10.1.0/31"
   leaf1.vm.network :private_network, ip: "10.10.2.0/31"
-  leaf1.vm.network :private_network, ip: "1.1.1.1/32"
   leaf1.vm.hostname = "leaf1"
   leaf1.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
   leaf1.vm.network "forwarded_port", guest: 22, host: 2001
@@ -29,9 +29,9 @@ config.vm.define "leaf1" do |leaf1|
   
 config.vm.define "leaf2" do |leaf2|  
   leaf2.vm.box = "CumulusCommunity/cumulus-vx"
+  leaf2.vm.network :private_network, ip: "2.2.2.2/32"
   leaf2.vm.network :private_network, ip: "20.20.1.0/31"
   leaf2.vm.network :private_network, ip: "20.20.2.0/31"
-  leaf2.vm.network :private_network, ip: "2.2.2.2/32"
   leaf2.vm.hostname = "leaf2"
   leaf2.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
   leaf2.vm.network "forwarded_port", guest: 22, host: 2002
@@ -56,9 +56,9 @@ config.vm.define "leaf2" do |leaf2|
   
 config.vm.define "leaf3" do |leaf3|  
   leaf3.vm.box = "CumulusCommunity/cumulus-vx"
+  leaf3.vm.network :private_network, ip: "3.3.3.3/32"
   leaf3.vm.network :private_network, ip: "30.30.1.0/31"
   leaf3.vm.network :private_network, ip: "30.30.2.0/31"
-  leaf3.vm.network :private_network, ip: "3.3.3.3/32"
   leaf3.vm.hostname = "leaf3"
   leaf3.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
   leaf3.vm.network "forwarded_port", guest: 22, host: 2003
@@ -83,9 +83,9 @@ config.vm.define "leaf3" do |leaf3|
 
 config.vm.define "leaf4" do |leaf4|  
   leaf4.vm.box = "CumulusCommunity/cumulus-vx"
+  leaf4.vm.network :private_network, ip: "4.4.4.4/32"
   leaf4.vm.network :private_network, ip: "40.40.1.0/31"
   leaf4.vm.network :private_network, ip: "40.40.2.0/31"
-  leaf4.vm.network :private_network, ip: "4.4.4.4/32"
   leaf4.vm.hostname = "leaf4"
   leaf4.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
   leaf4.vm.network "forwarded_port", guest: 22, host: 2004
@@ -110,11 +110,11 @@ config.vm.define "leaf4" do |leaf4|
   
 config.vm.define "spine1" do |spine1|  
   spine1.vm.box = "CumulusCommunity/cumulus-vx"
+  spine1.vm.network :private_network, ip: "11.11.11.11/32"
   spine1.vm.network :private_network, ip: "10.10.1.1/31"
   spine1.vm.network :private_network, ip: "20.20.1.1/31"
   spine1.vm.network :private_network, ip: "30.30.1.1/31"
   spine1.vm.network :private_network, ip: "40.40.1.1/31"
-  spine1.vm.network :private_network, ip: "11.11.11.11/32"
   spine1.vm.hostname = "spine1"
   spine1.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
   spine1.vm.network "forwarded_port", guest: 22, host: 3001
@@ -139,11 +139,11 @@ config.vm.define "spine1" do |spine1|
 
 config.vm.define "spine2" do |spine2|  
   spine2.vm.box = "CumulusCommunity/cumulus-vx"
+  spine2.vm.network :private_network, ip: "22.22.22.22/32"
   spine2.vm.network :private_network, ip: "10.10.2.1/31"
   spine2.vm.network :private_network, ip: "20.20.2.1/31"
   spine2.vm.network :private_network, ip: "30.30.2.1/31"
   spine2.vm.network :private_network, ip: "40.40.2.1/31"
-  spine2.vm.network :private_network, ip: "22.22.22.22/32"
   spine2.vm.hostname = "spine2"
   spine2.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
   spine2.vm.network "forwarded_port", guest: 22, host: 3002
