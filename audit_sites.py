@@ -6,7 +6,6 @@ parser.add_argument('--region', help='specify region')
 args = parser.parse_args()
 
 #Reading files
-#devices = ['gru1-vc-car-r1','gru1-vc-car-r2','gru3-vc-car-r1','gru3-vc-car-r2']
 devices = ['dummyrouter']
 results = []
 def compare_files(file1,file2,fromfile,tofile):
