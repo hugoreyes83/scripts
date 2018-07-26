@@ -10,7 +10,7 @@ try:
     print '\n[*]Scanning'
     start_time = datetime.now()
     conf.verb = 0
-    ans,unans = srp(Ether(dst = "ff:ff:ff:ff:ff:ff")/ARP(pdst = ips), timeout = 10, iface = interface, inter = 0.1)
+    ans,unans = srp(Ether(dst = "ff:ff:ff:ff:ff:ff")/ARP(pdst = ips), timeout = 20, iface = interface, inter = 0.1)
     print 'MAC  -  IP\n'
     for snd,rcv in ans:
         print rcv.sprintf(r'%Ether.src%  - %ARP.psrc%')
