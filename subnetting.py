@@ -1,4 +1,4 @@
-import netaddr
+from netaddr import IPNetwork
 import argparse
 import logging
 
@@ -11,51 +11,31 @@ parser = argparse.ArgumentParser(description='subnetting tool')
 parser.add_argument('--prefix',required=True)
 args = parser.parse_args()
 
-ip = args.prefix.split('/')[0]
-mask = int(args.prefix.split('/')[1])
+def figure_out_hosts(ip):
+    '''Figure out hosts in subnet'''
+    ip_network = IPNetwork(ip)
+    ip_list = list(ip_network)
+    mask = ip_network.netmask
+    prefixlen = ip_network.prefixlen
+    broadcast = ip_network.broadcast
+    cidr = ip_network.cidr
+    return ip_list,mask,broadcast,prefixlen,cidr
 
-def validate_ip(ip):
-    '''Validate IP before moving forward'''
-    return True if netaddr.valid_ipv4(ip) else False
-
-def validate_mask(mask):
-    '''Validate Mask if valid before moving forward'''
-    return True if mask > 0 and mask <= 32 else False
-
-def figure_out_hosts(ip,mask):
-    '''Figure out hosts per subnet'''
-    subnet = 32 - mask
-    if subnet == 0:
-        '''This is a host address'''
-        return 0
-    else:
-        return 2**subnet
-def figure_out_subnet(ip,mask):
-    '''Figure out subnets'''
-        
 def main():
     try:
-        logging.info('Checking if both {} and {} are valid'.format(ip,mask))
-        is_ip_valid = validate_ip(ip)
-        is_mask_valid = validate_mask(mask)
-        if not is_ip_valid:
-            print '{} is not a valid IP'.format(ip)
-            raise ValueError('oops! {} is not a valid IP'.format(ip))
-        else:
-            print '{} is a valid IP'.format(ip)
-        if not is_mask_valid:
-            print '{} is not a valid mask'.format(mask)
-            raise ValueError('Opps! {} is not a valid mask'.format(mask))
-        else:
-            print '{} is a valid mask'.format(mask)
-        hosts_per_subnet = figure_out_hosts(ip,mask)
-        print 'There can be up to {} hosts in this subnet'.format(hosts_per_subnet)       
-
-
-
-
-    except ValueError,e:
-        print e.args[0]
+        ip = args.prefix
+        hosts,mask,broadcast,prefixlen,cidr = figure_out_hosts(ip)
+        logging.info('IP prefix is {}'.format(str(cidr)))
+        logging.info('Subnet is {}'.format(str(mask)))
+        if str(mask) == '255.255.255.255':
+            print('This is a host address hence there are no other IPs available in this subnet')
+        else: 
+            print('There could be up to {} hosts in this subnet'.format((2**(32-int(prefixlen)))))
+            print('{} >> First Host'.format(str(hosts[0])))
+            print('{} >> Last Usable Host'.format(str(hosts[-2])))
+            print('{} >> Broadcast'.format(str(broadcast)))
+    except Exception as e:
+        print(e.message, e.args)
 
 if __name__ == '__main__':
     main()
