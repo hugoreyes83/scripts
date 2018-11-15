@@ -4,12 +4,9 @@ def unique_in_order(iterable):
     for i in iterable:
         if i == previous_element:
             previous_element = i
-            continue
         else:
             mylist.append(i)
             previous_element = i
-            continue
-
     return mylist
 
 result = unique_in_order('AAAABBBCCDAABBB')
