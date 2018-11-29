@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.INFO, format = LOG_FORMAT)
 #setting up argparser
 parser = argparse.ArgumentParser(description='subnetting tool')
 parser.add_argument('--prefix',required=True)
+parser.add_argument('--file', required=False)
 args = parser.parse_args()
 
 def figure_out_hosts(ip):
@@ -20,6 +21,13 @@ def figure_out_hosts(ip):
     broadcast = ip_network.broadcast
     cidr = ip_network.cidr
     return ip_list,mask,broadcast,prefixlen,cidr
+
+def write_to_file(hosts,user_file):
+    '''Write results to file'''
+    with open(user_file, 'w') as f:
+        for i in hosts:
+            f.write(str(i))
+            f.write('\n')
 
 def main():
     try:
@@ -34,8 +42,13 @@ def main():
             print('{} >> First Host'.format(str(hosts[0])))
             print('{} >> Last Usable Host'.format(str(hosts[-2])))
             print('{} >> Broadcast'.format(str(broadcast)))
+        if args.file:
+            write_to_file(hosts,args.file)
+            print('Exiting...')
+        else:
+            print('Exiting...')
     except Exception as e:
-        print(e.message, e.args)
+        print(e)
 
 if __name__ == '__main__':
     main()
