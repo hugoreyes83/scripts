@@ -62,29 +62,6 @@ def write_yaml_file(data,output_file):
     except:
         print('Something went wrong, {} could not be opened for writing'.format(output_file))
 
-def dummy_data(idx,sheet,my_dict):
-    for i in range(idx,idx+15,15):
-        logging.info('Reading rows from {} to {}'.format(idx,idx+15))
-
-        lbe_router1 = '{}'.format(sheet.cell(row=i,column=1).value)
-        lbe_router2 = '{}{}'.format(sheet.cell(row=i,column=1).value,'_2')
-        lbe_router3 = '{}{}'.format(sheet.cell(row=i,column=1).value,'_3')
-        lbe_router4 = '{}{}'.format(sheet.cell(row=i,column=1).value,'_4')
-        my_dict[lbe_router1] = {}
-        my_dict[lbe_router1]['remote_edge_interfaces'] = '[{},{},{},{}]'.format(sheet.cell(row=i,column=2).value,sheet.cell(row=i+1,column=2).value,sheet.cell(row=i+2,column=2).value,sheet.cell(row=i+3,column=2).value)
-        my_dict[lbe_router1]['position'] = position_check()
-        my_dict[lbe_router1]['stripe'] = stripe_check()
-        my_dict[lbe_router2] = {}
-        my_dict[lbe_router2]['remote_edge_interfaces'] = '[{},{},{},{}]'.format(sheet.cell(row=i+4,column=2).value,sheet.cell(row=i+5,column=2).value,sheet.cell(row=i+6,column=2).value,sheet.cell(row=i+7,column=2).value)
-        my_dict[lbe_router3] = {}
-        my_dict[lbe_router3]['remote_edge_interfaces'] = '[{},{},{},{}]'.format(sheet.cell(row=i+8,column=2).value,sheet.cell(row=i+9,column=2).value,sheet.cell(row=i+10,column=2).value,sheet.cell(row=i+11,column=2).value)
-        my_dict[lbe_router4] = {}
-        my_dict[lbe_router4]['remote_edge_interfaces'] = '[{},{},{},{}]'.format(sheet.cell(row=i+12,column=2).value,sheet.cell(row=i+13,column=2).value,sheet.cell(row=i+14,column=2).value,sheet.cell(row=i+15,column=2).value)
-        logging.info('{} has been created'.format(lbe_router1))
-        logging.info('{} has been created'.format(lbe_router2))
-        logging.info('{} has been created'.format(lbe_router3))
-        logging.info('{} has been created'.format(lbe_router4))
-
 def main():
     open_file(args.input)
     wb = openpyxl.load_workbook(args.input)
