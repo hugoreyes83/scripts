@@ -1,5 +1,3 @@
-from netaddr import IPNetwork
-from iptools import IpRange
 from ipaddress import ip_network
 from iptools.ipv4 import validate_cidr
 from prettytable import PrettyTable
@@ -37,9 +35,6 @@ def user_input(p):
     except ValueError as e:
         logging.info(e)
 
-def netmask(n):
-    return '{}{}'.format('0'*n,'1'*(32-n))
-
 def generate_subnets(s,p):
     return list(ip_network(s).subnets(new_prefix=p))
 
@@ -60,6 +55,7 @@ def main():
     #ask user for prefix length
     prefix_length = user_input(get_args.prefix.split('/')[1])
     logging.info('Generating number of /{} that could fit in {}'.format(prefix_length,get_args.prefix))
+    # do not proceed further if user provided prefix is larger than prefix
     assert(prefix_length), 'Provided prefix length cannot be larger than {}'.format(get_args.prefix.split('/')[1])
     #generate subnets
     generatesubnets = generate_subnets(get_args.prefix,int(prefix_length))
