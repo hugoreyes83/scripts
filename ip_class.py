@@ -1,6 +1,7 @@
 from geolite2 import geolite2
 from iptools import IpRange
 from ipaddress import ip_address
+import socket
 
 class IP():
     def __init__(self,ipaddress,mask):
@@ -22,3 +23,6 @@ class IP():
 
     def reverse_record(self):
         return ip_address(self.ipaddress).reverse_pointer
+
+    def reachability(self):
+        pass
