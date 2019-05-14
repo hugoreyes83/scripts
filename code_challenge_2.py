@@ -10,4 +10,5 @@ def find_limit(n):
 
 list1 = [2,3,6,1,5]
 
-print(find_limit([list1]))
+
+print(find_limit(list1))
