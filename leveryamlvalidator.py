@@ -59,6 +59,7 @@ class StripeValueError(Exception):
 
 class UnknownRack(Exception):
     pass
+
 class Result():
     '''class object to store results'''
     def __init__(self):
@@ -421,8 +422,10 @@ def compare_stripes_across_lbe_to_ctz(local_rack_dict,remote_rack_dict,local_rac
     results_compare_stripes = Result()
     logging.info('Comparing {} to {}'.format(local_rack,remote_rack))
     for stripe in available_stripes:
-        logging.info('lbe {} {} positions / ctz {} {} positions'.format(stripe,len(lbe_stripes[local_rack][stripe]),stripe,sum(ctz_stripes[remote_rack][stripe])))
-        results_compare_stripes.add_to_results(len(lbe_stripes[local_rack][stripe]) == sum(ctz_stripes[remote_rack][stripe]))
+        logging.info('lbe {} {} positions / ctz {} {} positions'.format\
+        	(stripe,len(lbe_stripes[local_rack][stripe]),stripe,sum(ctz_stripes[remote_rack][stripe])))
+        results_compare_stripes.add_to_results\
+        (len(lbe_stripes[local_rack][stripe]) == sum(ctz_stripes[remote_rack][stripe]))
     return check_results(results_compare_stripes.results)
 
 def compare_stripes_across_ctz_to_lbe(local_rack_dict,remote_rack_dict,local_rack,remote_rack):
@@ -438,8 +441,10 @@ def compare_stripes_across_ctz_to_lbe(local_rack_dict,remote_rack_dict,local_rac
     results_compare_stripes = Result()
     logging.info('Comparing {} to {}'.format(local_rack,remote_rack))
     for stripe in available_stripes:
-        logging.info('lbe {} {} positions / ctz {} {} positions'.format(stripe,len(lbe_stripes[remote_rack][stripe]),stripe,sum(ctz_stripes[local_rack][stripe])))
-        results_compare_stripes.add_to_results(len(lbe_stripes[remote_rack][stripe]) == sum(ctz_stripes[local_rack][stripe]))
+        logging.info('lbe {} {} positions / ctz {} {} positions'.format\
+        	(stripe,len(lbe_stripes[remote_rack][stripe]),stripe,sum(ctz_stripes[local_rack][stripe])))
+        results_compare_stripes.add_to_results\
+        (len(lbe_stripes[remote_rack][stripe]) == sum(ctz_stripes[local_rack][stripe]))
     return check_results(results_compare_stripes.results)
 
 def is_half_or_full_lever_rack(rack_dict,r_name):
@@ -466,7 +471,8 @@ def validate_number_of_lever_racks(yamldict):
         assert yamldict.get('racks').get(rack).get('neighbors'),'Neighbors dictionary cannot be empty'
         rack_results.add_to_results(check_lever_rack(yamldict.get('racks').get(rack).get('neighbors',None)))
         #rack_results.add_to_results(validate_lever_rack(yaml['racks'][rack]['neighbors']))
-        logging.info('Checks {} on {}'.format('PASSED' if check_lever_rack(yamldict.get('racks').get(rack).get('neighbors',None)) else 'FAILED',rack))
+        logging.info('Checks {} on {}'.format('PASSED' \
+        	if check_lever_rack(yamldict.get('racks').get(rack).get('neighbors',None)) else 'FAILED',rack))
     return check_results(rack_results.results)
 
 def validate_neighbors(yamldict):
@@ -480,11 +486,13 @@ def validate_neighbors(yamldict):
         logging.info('Validating neighbors in {} exist in Neighbors Dictionary'.format(rack))
         list_of_neighbors_per_rack = list_of_devices_separated_per_rack[rack]
         neighbors_results.add_to_results(check_rack_neighbors_in_neighbors(neighbors_dict, list_of_neighbors_per_rack))
-        logging.info('Neighbor Check in {} {}'.format(rack, 'PASSED' if check_rack_neighbors_in_neighbors(neighbors_dict, list_of_neighbors_per_rack) else 'FAILED'))
+        logging.info('Neighbor Check in {} {}'.format(rack, 'PASSED' \
+        	if check_rack_neighbors_in_neighbors(neighbors_dict, list_of_neighbors_per_rack) else 'FAILED'))
         list_of_neighbors += list_of_neighbors_per_rack
     logging.info('Validating that Neighbors exist in Racks Dictionaries')
     neighbors_results.add_to_results(check_neighbors_in_rack_neighbors(neighbors_dict, list_of_neighbors))
-    logging.info('Neighbors Check {}'.format('PASSED' if check_neighbors_in_rack_neighbors(neighbors_dict, list_of_neighbors) else 'FAILED'))
+    logging.info('Neighbors Check {}'.format('PASSED' \
+    	if check_neighbors_in_rack_neighbors(neighbors_dict, list_of_neighbors) else 'FAILED'))
     return check_results(neighbors_results.results)
 
 def check_structure_yaml(yaml,schema):
@@ -495,6 +503,7 @@ def check_structure_yaml(yaml,schema):
             return True
         else:
             return False
+
     except DocumentError as e:
         print(e)
 
@@ -651,7 +660,8 @@ def main():
     logging.info('Found the following remote racks')
     for rack in local_racks:
         get_remote_racks = find_all_lever_files_and_racks(lever_devices_only(input_yaml_file,rack))#TODO
-        remote_lever_rack = open_file(get_remote_racks[rack]['remote_file'],'yaml')['racks'][get_remote_racks[rack]['remote_rack']]['neighbors']
+        remote_lever_rack_dict = open_file(get_remote_racks[rack]['remote_file'],'yaml')['racks'][get_remote_racks[rack]['remote_rack']]['neighbors']
+        remote_lever_rack = get_remote_racks[rack]['remote_rack']
         local_lever_rack = input_yaml_file['racks'][rack]['neighbors']
         # print(get_remote_racks)
         logging.info('{} in {}'.format(get_remote_racks[rack]['remote_rack'],get_remote_racks[rack]['remote_file']))
@@ -660,10 +670,10 @@ def main():
         # print(run_is_lbe_or_catzilla_remote_rack[get_remote_racks[rack]['remote_rack']])
         if run_is_lbe_or_catzilla_remote_rack.get(get_remote_racks[rack]['remote_rack']) == 'lbe':
             #compare_stripes_across_ctz_to_lbe
-            compare_stripes_across_ctz_to_lbe(local_lever_rack,remote_lever_rack,rack,get_remote_racks[rack]['remote_rack'])
+            compare_stripes_across_ctz_to_lbe(local_lever_rack,remote_lever_rack_dict,rack,remote_lever_rack)
         elif run_is_lbe_or_catzilla_remote_rack.get(get_remote_racks[rack]['remote_rack']) == 'ctz':
             #compare_stripes_across_lbe_to_ctz
-            compare_stripes_across_lbe_to_ctz(local_lever_rack,remote_lever_rack,rack,get_remote_racks[rack]['remote_rack'])
+            compare_stripes_across_lbe_to_ctz(local_lever_rack,remote_lever_rack_dict,rack,remote_lever_rack)
     logging.info('All tests have been completed. Below are the final result:')
     # print(final_results.results)
     logging.info('Final Result ===== {}'.format('PASSED' if check_results(final_results.results) else 'FAILED'))
